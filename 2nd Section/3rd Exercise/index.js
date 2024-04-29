@@ -1,11 +1,12 @@
 function createAggregator(firstNum) {
     return function finishAddition(secNum) {
-        return secNum + firstNum;
+        return firstNum += secNum;
     }
 }
 
 let addFive = createAggregator(5)
 console.log(addFive(3))
+console.log(addFive(2))
 
 
 /* How do functions mantain access to external variables even after the external function has finished its execution?:

@@ -1,5 +1,5 @@
-function handleAsync(callback, testPromise) {
-    testPromise
+function handleAsync(callback, aPromise) {
+    aPromise
         .then(() => {
             callback("The promise was fulfilled!")
         })
