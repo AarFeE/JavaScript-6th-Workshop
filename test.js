@@ -1,20 +1,16 @@
-const test1 = {
-    accum: 0
-}
-const test2 = {
-    accum: 0
-}
+let rooms = [
+    {
+        "number": 101,
+        "roomTypeId": 1,
+        "priceNight": 50,
+        "availability": true
+    },
+    {
+        "number": 102,
+        "roomTypeId": 2,
+        "priceNight": 80,
+        "availability": true
+    }
+]
 
-function suma(num1, num2) {
-    num1.accum++
-    num2.accum++
-}
-
-suma(test1, test2)
-console.log(test1, test2)
-
-suma(test1, test2)
-console.log(test1, test2)
-
-suma(test1, test2)
-console.log(test1, test2)
+console.log(rooms.some(({ number }) => number == 102))
