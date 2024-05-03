@@ -5,6 +5,8 @@
         let id = 1;
 
         while (true) {
+            console.log(theData);
+            console.log(theReservations);
             let option = getOption();
 
             if (option == 5) {
@@ -20,13 +22,11 @@
             }
 
             if (option == 3) {
-                let name = callPrompt("Insert the name of the customer that made the reservation:", (value) => Boolean(value)).toUpperCase();
-                let custReservations = theReservations.filter(({ customer }) => customer == name);
-                let pickedRes = callPrompt(`${foundReservations(name, custReservations, theData)}\n\nInsert the ID of the reservation you want to Edit`, (value) =>
-                    theReservations.find(({ id }) => id == value)
-                );
-                let editRes = theReservations.filter(({ id }) => id == pickedRes);
-                console.log(editRes);
+                editReservation(theReservations, theData);
+            }
+
+            if (option == 4) {
+                deleteReservation(theReservations, theData);
             }
         }
     } catch (error) {
@@ -120,4 +120,44 @@ function foundReservations(search, thisArray, bigArray) {
     return `FOUND RESERVATIONS OF ${search}\n\n${thisArray.map((value) => `Reservation ID: ${value.id}\n` +
         `Room Number: ${value.room}\nRoom Type: ${bigArray.roomTypes.find(({ id }) => id == value.typeId).name}\n` +
         `Beginning Date: ${value.beginningDate}\nEnd Date: ${value.endDate}`).join('\n\n')}`;
+}
+
+function editReservation(reservations, data) {
+    let name = callPrompt("Insert the name of the customer that made the reservation:", (value) => Boolean(value)).toUpperCase();
+    if (reservations.find(({ customer }) => customer == name)) {
+        let custReservations = reservations.filter(({ customer }) => customer == name);
+        let pickedRes = callPrompt(`${foundReservations(name, custReservations, data)}\n\nInsert the reservation's ID you want to Edit`, (value) =>
+            reservations.find(({ id }) => id == value)
+        );
+
+        let regexDate = new RegExp(/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/);
+        let editRes = reservations.find(({ id }) => id == pickedRes);
+
+        editRes.beginningDate = callPrompt(`Insert the new Beginning Date of the reservation (Current Date: ${editRes.beginningDate}):`,
+            (value) => regexDate.test(value));
+
+        editRes.endDate = callPrompt(`Insert the new End Date of the reservation (Current Date: ${editRes.endDate}):`,
+            (value) => regexDate.test(value));
+
+        alert("The reservations has been updated correctly!")
+    } else {
+        alert("There's no reservations made with this name!")
+    }
+}
+
+function deleteReservation(reservations, data) {
+    let name = callPrompt("Insert the name of the customer that made the reservation:", (value) => Boolean(value)).toUpperCase();
+    if (reservations.find(({ customer }) => customer == name)) {
+        let custReservations = reservations.filter(({ customer }) => customer == name);
+        let pickedRes = callPrompt(`${foundReservations(name, custReservations, data)}\n\nInsert the reservation's ID you want to Edit`, (value) =>
+            reservations.find(({ id }) => id == value)
+        );
+        let editRes = reservations.find(({ id }) => id == pickedRes);
+
+        data.rooms[data.rooms.indexOf(data.rooms.find(({ number }) => editRes.room == number))].availability = true;
+        reservations.splice(reservations.indexOf(reservations.find(({ id }) => id == pickedRes)), 1);
+        alert("The reservation has been successfully deleted!");
+    } else {
+        alert("There's no reservations made with this name!");
+    }
 }
