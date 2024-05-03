@@ -5,9 +5,6 @@
         let id = 1;
 
         while (true) {
-            console.log(theData);
-            console.log(theReservations);
-            console.log(theReservations.some(({ id }) => id == 1))
             let option = getOption();
 
             if (option == 5) {
@@ -19,15 +16,17 @@
             }
 
             if (option == 2) {
-                getReservations(theData, theReservations, alert);
+                getReservations(theData, theReservations);
             }
 
             if (option == 3) {
-                let pickedRes = getReservations(theData, theReservations, callPrompt);
-                console.log(theReservations.find(({ id }) => id == 1));
+                let name = callPrompt("Insert the name of the customer that made the reservation:", (value) => Boolean(value)).toUpperCase();
+                let custReservations = theReservations.filter(({ customer }) => customer == name);
+                let pickedRes = callPrompt(`${foundReservations(name, custReservations, theData)}\n\nInsert the ID of the reservation you want to Edit`, (value) =>
+                    theReservations.find(({ id }) => id == value)
+                );
                 let editRes = theReservations.filter(({ id }) => id == pickedRes);
                 console.log(editRes);
-                alert(JSON.stringify(editRes));
             }
         }
     } catch (error) {
@@ -105,19 +104,20 @@ function makeReservation(data, reservations, i) {
     return i++;
 }
 
-function getReservations(data, reservations, callback) {
+function getReservations(data, reservations) {
     let name = callPrompt("Insert the name of the customer that made the reservation:", (value) => Boolean(value)).toUpperCase();
-    console.log(name);
 
     let custReservations = reservations.filter(({ customer }) => customer == name)
 
     if (custReservations.length == 0) {
         alert("There's no reservation in our database with the inserted customer name!");
     } else {
-        callback(`FOUND RESERVATIONS OF ${name}\n\n${custReservations.map((value) => `Reservation ID: ${value.id}\n` +
-            `Room Number: ${value.room}\nRoom Type: ${data.roomTypes.find(({ id }) => id == value.typeId).name}\n` +
-            `Beginning Date: ${value.beginningDate}\nEnd Date: ${value.endDate}`).join('\n\n')} ${callback == callPrompt ? `\n\nInsert the ID of the reservation you want to modify:` +
-                `` : ''}`, (value) => { return !isNaN(value) && custReservations.some(({ id }) => id == value) });
-
+        alert(foundReservations(name, custReservations, data));
     }
+}
+
+function foundReservations(search, thisArray, bigArray) {
+    return `FOUND RESERVATIONS OF ${search}\n\n${thisArray.map((value) => `Reservation ID: ${value.id}\n` +
+        `Room Number: ${value.room}\nRoom Type: ${bigArray.roomTypes.find(({ id }) => id == value.typeId).name}\n` +
+        `Beginning Date: ${value.beginningDate}\nEnd Date: ${value.endDate}`).join('\n\n')}`;
 }

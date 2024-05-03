@@ -15,9 +15,7 @@ function printCode(selectLine) {
         '        return "Función declarada ha sido llamada.";', '    }', '    ', '    const funcionExpresada = function () {', '        return "Función expresada ha sido llamada.";', '    };'
     ]
 
-    if (selectLine != null) {
-        code[selectLine] = `🔸 ${code[selectLine]}`
-    }
+    code[selectLine] = `🔸 ${code[selectLine]}`
 
     return code.join('\n')
 }
