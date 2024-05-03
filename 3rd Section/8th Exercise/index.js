@@ -17,16 +17,16 @@ function main() {
     }
 
     return accum
-}
 
-function promptNum(msg) {
-    while (true) {
-        let input = Number(prompt(msg))
+    function promptNum(msg) {
+        while (true) {
+            let input = Number(prompt(msg))
 
-        if (isNaN(input)) {
-            alert("The inserted value wasn't a number")
-        } else {
-            return input
+            if (isNaN(input)) {
+                alert("The inserted value wasn't a number")
+            } else {
+                return input
+            }
         }
     }
 }
